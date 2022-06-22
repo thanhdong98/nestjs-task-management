@@ -3,11 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './tasks/task.entity';
 import { TasksModule } from './tasks/tasks.module';
+import { AuthModule } from './auth/auth.module';
+import { User } from './auth/user.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TasksModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -15,10 +16,12 @@ import { TasksModule } from './tasks/tasks.module';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Task],
+      entities: [Task, User],
       autoLoadEntities: true,
       synchronize: true,
     }),
+    TasksModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

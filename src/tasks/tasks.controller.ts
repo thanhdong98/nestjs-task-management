@@ -8,7 +8,9 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateTaskDto } from './dto/createTaskDto';
 import { GetTasksFilterDto } from './dto/getTaskDto';
 import { UpdateTaskDto, UpdateTaskStatusDto } from './dto/updateTaskDto';
@@ -16,6 +18,7 @@ import { Task } from './tasks.model';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
+@UseGuards(AuthGuard())
 export class TasksController {
   constructor(private taskService: TasksService) {}
 
