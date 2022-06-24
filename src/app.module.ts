@@ -15,17 +15,25 @@ import { configValidationSchema } from './config.schema';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('POSTGRES_HOST'),
-        port: Number(configService.get('POSTGRES_PORT')),
-        username: configService.get('POSTGRES_USERNAME'),
-        password: configService.get('POSTGRES_PASSWORD'),
-        database: configService.get('POSTGRES_DATABASE'),
-        entities: [Task, User],
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const isProd = configService.get('NODE_ENV') === 'prod';
+
+        return {
+          ssl: isProd,
+          extra: {
+            ssl: isProd ? { rejectUnauthorized: false } : null,
+          },
+          type: 'postgres',
+          host: configService.get('POSTGRES_HOST'),
+          port: Number(configService.get('POSTGRES_PORT')),
+          username: configService.get('POSTGRES_USERNAME'),
+          password: configService.get('POSTGRES_PASSWORD'),
+          database: configService.get('POSTGRES_DATABASE'),
+          entities: [Task, User],
+          autoLoadEntities: true,
+          synchronize: true,
+        };
+      },
     }),
     TasksModule,
     AuthModule,
