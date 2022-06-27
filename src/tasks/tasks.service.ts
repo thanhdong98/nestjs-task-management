@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/auth/user.entity';
 import { Repository } from 'typeorm';
+import { User } from '../auth/user.entity';
 import { GetTasksFilterDto } from './dto/getTaskDto';
 import { Task as TaskEntity } from './task.entity';
 import { Task, TaskStatus } from './tasks.model';
@@ -39,9 +39,7 @@ export class TasksService {
       user,
       status: TaskStatus.OPEN,
     });
-
     await this.tasksRepository.save(newTask);
-
     return newTask;
   }
 
